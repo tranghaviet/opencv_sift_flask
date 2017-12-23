@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import request
 from flask import render_template
-g
+
 app = Flask(__name__)
+
 
 # run: export FLASK_APP=opencv_sift_flask.py; flask run
 @app.route('/', methods=['GET', 'POST'])
