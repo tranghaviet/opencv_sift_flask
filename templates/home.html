@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/dropzone.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .image-table{
+            border: 1px solid black;
+        }
+        body {
+            background-color: gray;
+            background-repeat: no-repeat;
+        }
+        form{
+            padding-top: 2%;
+            padding-left: 2%;
+        }
+    </style>
+</head>
+<body>
+    <form method=post enctype=multipart/form-data class="form-control-file">
+        <p><input type=file name=file id=image class="form-group btn btn-lg">
+            <input type=submit value=Upload id=upload class="form-group btn btn-lg btn-primary">
+    </form>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 table">
+            <img src="" alt="" id ="image1" style="width: 100%;">
+        </div>
+        <div class="col-sm-5 table">
+            <img src="" alt="" id ="image2" style="width: 100%;">
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+           
+    <script>
+        $("#upload").on("click", function(event) {
+            event.preventDefault();
+            var file_data = $("#image").prop("files")[0];   
+            var form_data = new FormData();
+            form_data.append("file", file_data);
+            $.ajax({
+                method: 'POST',
+                url: '/upload_image',
+                data: form_data,
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function(data) {
+                    console.log(data);
+                    $("#image1").attr("src",data.filePath);
+                    $.ajax({
+                        method: 'POST',
+                        url: '/get_images',
+                        dataType: 'json',
+                        success: function(data) {
+                            $("#image2").attr("src",data.filePath);
+                            $(".table").addClass("image-table");
+                        },
+                    });
+                },
+            });
+        });
+    </script>
+</body>
+</html>
