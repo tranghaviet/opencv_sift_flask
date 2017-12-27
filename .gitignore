@@ -1,2 +1,5 @@
 .idea/
 __pycache__/
+indexed_images/
+static/
+.ipynb_checkpoints/
