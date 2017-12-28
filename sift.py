@@ -25,6 +25,7 @@ def index_images_with_sift(input_path='static/database/',
 
         # sift extraction
         sift = cv2.xfeatures2d.SIFT_create()
+        # sift.detect() finds the keypoint in the images
         keypoint, descriptor = sift.detectAndCompute(gray, None)
 
         # Store and Retrieve keypoint features

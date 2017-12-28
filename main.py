@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, json
+from flask import *
 from pdb import set_trace
 from werkzeug import secure_filename
 import os
@@ -34,14 +34,14 @@ def upload_image():
 @app.route('/get_images', methods=['POST'])
 def uploaded_file():
     image = request.form['path']
-    
+
     if not image:
         image = '/wall_paper.jpg'
 
     # set_trace()
     image = cv2.imread('static/' + image)
 
-    matching_images = search_image(image, 0.7, 5)
+    matching_images = search_image(image, 0.7, 8)
 
     print(matching_images)
 
@@ -67,3 +67,25 @@ def index_images():
     flash('Indexed ' + str(images_success) + ' images')
 
     return render_template('index_image_result.html')
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Development Server Help')
+    parser.add_argument("-d", "--debug", action="store_true", dest="debug_mode",
+                        help="run in debug mode (for use with PyCharm)",
+                        default=False)
+    parser.add_argument("-p", "--port", dest="port",
+                        help="port of server (default:%(default)s)", type=int,
+                        default=5000)
+
+    cmd_args = parser.parse_args()
+    app_options = {"port": cmd_args.port}
+
+    if cmd_args.debug_mode:
+        app_options["debug"] = True
+        app_options["use_debugger"] = False
+        app_options["use_reloader"] = False
+
+    app.run(**app_options)

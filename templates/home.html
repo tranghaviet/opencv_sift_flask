@@ -60,6 +60,8 @@
     </style>
 </head>
 <body>
+    <!-- <h3><a href="/index_image">Index images</a></h3> -->
+
     <form method=post enctype=multipart/form-data class="form-control-file">
         <p><input type=file name=file id=image class="form-group btn btn-lg">
             <input type=submit value=Upload id=upload class="form-group btn btn-lg btn-primary">
@@ -81,11 +83,11 @@
         </div>
         <div class="col-md-1"></div>
     </div>
-           
+
     <script>
         $("#upload").on("click", function(event) {
             event.preventDefault();
-            var file_data = $("#image").prop("files")[0];   
+            var file_data = $("#image").prop("files")[0];
             var form_data = new FormData();
             form_data.append("file", file_data);
             $.ajax({
