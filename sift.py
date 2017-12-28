@@ -69,7 +69,7 @@ def search_image(image, distance_rate, number_match_min, k=2,
 
         matches = bf.knnMatch(image_descriptor, db_descriptor, k)
         print(matches)
-        set_trace()
+        # set_trace()
         good = []
         for first, second in matches:
             if first.distance < distance_rate * second.distance:
