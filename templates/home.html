@@ -8,22 +8,54 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="js/dropzone.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .image-table{
+        img{
+            max-height: 500px;
+            width: auto;
             border: 1px solid black;
+        }
+        .image-table{
+            /* border: 1px solid black; */
+        }
+        html {
+            height: 100%
         }
         body {
             background-color: gray;
+            background-size: 100% 100%;
             background-repeat: no-repeat;
+            background-image: url("https://www.walldevil.com/wallpapers/a39/different-backgrounds-website-sphere-beautiful-background-web-wallpapers.jpg")
         }
         form{
             padding-top: 2%;
             padding-left: 2%;
+        }
+        .loader {
+            border: 16px solid black; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
+
+        .loading {
+            font-size: 30px;
+            color: green;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -32,21 +64,28 @@
         <p><input type=file name=file id=image class="form-group btn btn-lg">
             <input type=submit value=Upload id=upload class="form-group btn btn-lg btn-primary">
     </form>
+    <!-- <div class="loader"></div> -->
     <div class="row">
         <div class="col-md-1"></div>
-        <div class="col-md-5 table">
-            <img src="" alt="" id ="image1" style="width: 100%;">
+        <div class="col-md-5 table" style="text-align: center;">
+            <h3 style="color: #060400;">Your uploaded image:</h3>
+            <img src="" alt="" id ="image1">
         </div>
-        <div class="col-sm-5 table">
-            <img src="" alt="" id ="image2" style="width: 100%;">
+        <div class="col-sm-5 table" style="text-align: center;">
+            <h3 style="color: #060400;">Matching image:</h3>
+            <div id="loader" style="display: none; text-align:center" class="center">
+                <div class="loader center" ></div>
+                <div class="center loading">Loading</div>
+            </div>
+            <img src="" alt="" id ="image2">
         </div>
         <div class="col-md-1"></div>
     </div>
-
+           
     <script>
         $("#upload").on("click", function(event) {
             event.preventDefault();
-            var file_data = $("#image").prop("files")[0];
+            var file_data = $("#image").prop("files")[0];   
             var form_data = new FormData();
             form_data.append("file", file_data);
             $.ajax({
@@ -57,20 +96,26 @@
                 contentType: false,
                 cache: false,
                 processData: false,
-                async: false,
                 success: function(data) {
                     console.log(data);
-                    console.log(data.filePath);
-                    $("#image1").attr("src", data.filePath);
+                    $("#image1").attr("src",data.filePath);
                     $.ajax({
+                        beforeSend: function(){
+                            $("#image2").attr("src","");
+                            $("#loader").show();
+                        },
+                        complete: function(){
+                        },
                         method: 'POST',
-                        url: '/get_images',
                         data: {
                           path: data.filePath
                         },
+                        url: '/get_images',
+                        async: true,
                         dataType: 'json',
-                        success: function(data) {
-                            $("#image2").attr("src",data.filePath);
+                        success: function(msg) {
+                            $("#loader").hide();
+                            $("#image2").attr("src",msg.filePath);
                             $(".table").addClass("image-table");
                         },
                     });

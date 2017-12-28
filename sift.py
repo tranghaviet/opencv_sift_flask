@@ -68,7 +68,6 @@ def search_image(image, distance_rate, number_match_min, k=2,
         db_descriptor, db_image = pickle.load(open(file, "rb"))
 
         matches = bf.knnMatch(image_descriptor, db_descriptor, k)
-        print(matches)
         # set_trace()
         good = []
         for first, second in matches:
