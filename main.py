@@ -34,7 +34,7 @@ def upload_image():
 @app.route('/get_images', methods=['POST'])
 def uploaded_file():
     image = request.form['path']
-
+    
     if not image:
         image = '/wall_paper.jpg'
 
