@@ -1,2 +1,4 @@
 # How to use
-**bash init.sh**
+```
+bash init.sh
+```

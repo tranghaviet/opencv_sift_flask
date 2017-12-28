@@ -42,11 +42,11 @@
         </div>
         <div class="col-md-1"></div>
     </div>
-           
+
     <script>
         $("#upload").on("click", function(event) {
             event.preventDefault();
-            var file_data = $("#image").prop("files")[0];   
+            var file_data = $("#image").prop("files")[0];
             var form_data = new FormData();
             form_data.append("file", file_data);
             $.ajax({
@@ -60,10 +60,14 @@
                 async: false,
                 success: function(data) {
                     console.log(data);
-                    $("#image1").attr("src",data.filePath);
+                    console.log(data.filePath);
+                    $("#image1").attr("src", data.filePath);
                     $.ajax({
                         method: 'POST',
                         url: '/get_images',
+                        data: {
+                          path: data.filePath
+                        },
                         dataType: 'json',
                         success: function(data) {
                             $("#image2").attr("src",data.filePath);
