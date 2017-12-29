@@ -4,7 +4,7 @@ from werkzeug import secure_filename
 import os
 from sift import *
 from werkzeug.contrib.cache import SimpleCache
-
+import pdb
 app = Flask(__name__, static_url_path="")
 UPLOAD_FOLDER = './static/img'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -62,7 +62,7 @@ def uploaded_file():
 
     matching_images = search_image(image, 0.75, 10, db_images)
 
-    print(matching_images)
+    # print(matching_images)
     #
     # if len(matching_images) == 0:
     #     return json.dump(
@@ -71,9 +71,13 @@ def uploaded_file():
     #         }
     #     )
     results = []
-
+    # for i in range(5):
+    #     results.append('database/60.jpg')
+    
     for i in range(5):
         results.append(matching_images[i]['image'][7:])
+    
+    # pdb.set_trace()
 
     return json.dumps(
         {
