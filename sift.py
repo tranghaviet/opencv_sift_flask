@@ -4,7 +4,6 @@ import _pickle as pickle
 from pdb import set_trace
 from operator import itemgetter
 
-
 def index_images_with_sift(input_path='static/database/',
                            output_path='indexed_images/'):
     """
@@ -39,7 +38,7 @@ def index_images_with_sift(input_path='static/database/',
     return len(images)
 
 
-def search_image(image, distance_rate, number_match_min, k=2,
+def search_image(image, distance_rate, number_match_min, db_images, k=2,
                  indexed_images_folder='indexed_images/'):
     """
     Search an image in database using sift
@@ -61,14 +60,21 @@ def search_image(image, distance_rate, number_match_min, k=2,
     print("Start searching")
     bf = cv2.BFMatcher()
     results = []
-    matching_keypoints = [] # what is matching keypoint?
     # image_numbers_database = []
 
-    for i in range(1, 1000):
-        file = indexed_images_folder + '/' + str(i) + '.txt'
-        db_descriptor, db_image = pickle.load(open(file, "rb"))
+    # for i in range(1, 1000):
+    for image_path, db_descriptor in db_images.items():
+        # file = indexed_images_folder + '/' + str(i) + '.txt'
+        # db_descriptor = pickle.load(open(file, "rb"))[0]
 
+        # so sanh cac keypoint cua anh tim kiem voi du lieu anh trong DB
         matches = bf.knnMatch(image_descriptor, db_descriptor, k)
+        # FLANN_INDEX_KDTREE = 0
+        # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        # search_params = dict(checks=50)
+        # flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # matches = flann.knnMatch(image_descriptor, db_descriptor, k=2)
+
         # set_trace()
         good = []
         for first, second in matches:
@@ -76,13 +82,13 @@ def search_image(image, distance_rate, number_match_min, k=2,
                 good.append([first])
 
         good_len = len(good)
-        matching_keypoints.append(good_len)
+        # matching_keypoints.append(good_len)
         # image_numbers_database.append(i)
 
-        # if image
+        # if number of good keypoint greater than number_match_min, take it.
         if good_len > number_match_min:
             matching_image = {
-                'image': i,
+                'image': image_path,
                 'matching_kp': good_len
             }
             results.append(matching_image)

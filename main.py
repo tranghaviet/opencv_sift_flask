@@ -3,10 +3,28 @@ from pdb import set_trace
 from werkzeug import secure_filename
 import os
 from sift import *
+from werkzeug.contrib.cache import SimpleCache
 
 app = Flask(__name__, static_url_path="")
 UPLOAD_FOLDER = './static/img'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# ---caching---
+cache = SimpleCache(threshold=2000, default_timeout=3000)
+indexed_images_folder = 'indexed_images/'
+cache_list = {}
+
+for i in range(1, 1000):
+    file = indexed_images_folder + '/' + str(i) + '.txt'
+    db_descriptor, db_image_path = pickle.load(open(file, "rb"))
+
+    cache_list[db_image_path] = (db_descriptor)
+
+cache.set('db_images', cache_list)
+del cache_list
+
+
+# ---end caching---
 
 
 @app.route("/")
@@ -38,27 +56,33 @@ def uploaded_file():
     if not image:
         image = '/wall_paper.jpg'
 
-    # set_trace()
     image = cv2.imread('static/' + image)
 
-    matching_images = search_image(image, 0.7, 8)
+    db_images = cache.get('db_images')
+
+    matching_images = search_image(image, 0.75, 10, db_images)
 
     print(matching_images)
+    #
+    # if len(matching_images) == 0:
+    #     return json.dump(
+    #         {
+    #             ''
+    #         }
+    #     )
+    results = []
 
-    # set_trace()
-    if len(matching_images) == 0:
-        return json.dump(
-            {
-                ''
-            }
-        )
+    for i in range(5):
+        results.append(matching_images[i]['image'][7:])
 
-    # set_trace()
     return json.dumps(
         {
-            'filePath': 'database/' + str(matching_images[0]['image']) + '.jpg'
+            # 'filePath': 'database/' + str(matching_images[0]['image']) + '.jpg'
+            # 'filePath': matching_images[0]['image'][7:]
+            'filePath': results
         }
     )
+
 
 @app.route('/index_image', methods=['GET'])
 def index_images():
@@ -70,6 +94,7 @@ def index_images():
 
 
 if __name__ == '__main__':
+    # for debug by pycharm
     import argparse
 
     parser = argparse.ArgumentParser(description='Development Server Help')
