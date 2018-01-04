@@ -93,16 +93,16 @@ def search_image(image, distance_rate, number_match_min, db_images, k=2,
             }
             results.append(matching_image)
 
-            # draw matcher
-            img_in_db = cv2.imread(image_path, 0)
-            img_in_db_kp, img_in_db_des = sift.detectAndCompute(
-                cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), None)
+            # # draw matcher
+            # img_in_db = cv2.imread(image_path, 0)
+            # img_in_db_kp, img_in_db_des = sift.detectAndCompute(
+            #     cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), None)
 
-            img_matcher = cv2.drawMatchesKnn(img_in_db, img_in_db_kp, image,
-                                             image_keypoint, sorted(matches, key = lambda x:x.distance), None,
-                                             # image_keypoint, good, None,
-                                             flags=2)
-            cv2.imwrite('indexed_images/' + image_path[:16], img_matcher)
+            # img_matcher = cv2.drawMatchesKnn(img_in_db, img_in_db_kp, image,
+            #                                  image_keypoint, sorted(matches, key = lambda x:x.distance), None,
+            #                                  # image_keypoint, good, None,
+            #                                  flags=2)
+            # cv2.imwrite('indexed_images/' + image_path[:16], img_matcher)
 
     results = sorted(results, key=itemgetter('matching_kp'), reverse=True)
 

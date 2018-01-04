@@ -73,10 +73,14 @@ def uploaded_file():
     results = []
     # for i in range(5):
     #     results.append('database/60.jpg')
-    
-    for i in range(5):
-        results.append(matching_images[i]['image'][7:])
-    
+
+    if len(matching_images) >= 5:
+        for i in range(5):
+            results.append(matching_images[i]['image'][7:])
+    else:
+        for i in matching_images:
+            results.append(i['image'][7:])
+
     # pdb.set_trace()
 
     return json.dumps(

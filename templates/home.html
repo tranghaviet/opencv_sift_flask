@@ -41,6 +41,9 @@
             width: 120px;
             height: 120px;
             animation: spin 2s linear infinite;
+            margin: auto;
+            /*width: 50%;*/
+            padding: 10px;
         }
         .center {
             margin: auto;
@@ -70,37 +73,39 @@
     </form>
     <!-- <div class="loader"></div> -->
     <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 table" style="text-align: center;">
+        <!-- <div class="col-md-1"></div> -->
+        <div class="col-md-6 table" style="text-align: center;">
             <h3 style="color: #060400;">Your uploaded image:</h3>
             <img src="" alt="" id ="image_upload">
         </div>
-        <div class="col-sm-3 table" style="text-align: center;">
-            <h3 style="color: #060400;">Matching images:</h3>
+        <div class="col-sm-6 table" style="text-align: center;">
+            <h3 style="color: #060400;">Matching image:</h3>
             <div id="loader" style="display: none; text-align:center" class="center">
-                <div class="loader center" ></div>
+                <div class="loader" ></div>
                 <div class="center loading">Loading</div>
             </div>
-            <img src="" alt="" id ="image0"> 
+            <img src="" alt="" id ="image0">
         </div>
-        <div class="col-md-4 table" style="text-align: center;">
-            <h3 style="color: #060400;">Other matching images:</h3>
-            <div>
-                <div class="row">
-                    <div class="col-md-6" style="margin-bottom: 10px">
-                        <img src= "" alt="" id ="image1" style="width: 100%; margin-bottom: 10px;">
-                        <img src="" alt="" id ="imagg2" style="width: 100%">
-                    </div>
-                    <div class="col-md-6">
-                        <img src="" alt="" id ="image3" style="width: 100%; margin-bottom: 10px;">
-                        <img src="" alt="" id ="image4" style="width: 100%">
-                        
-                    </div>
+
+        <div class="col-md-1"></div>
+    </div style="margin-top: 30px">
+    <!-- <div class="col-md-4 table" style="text-align: center;"> -->
+        <!-- <h3 style="color: #060400;">Other matching images:</h3> -->
+        <div>
+            <h3 style="color: #060400; margin-top: 55px; margin-left: 10%">Other matching images:</h3>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-3" style="margin-bottom: 10px">
+                    <img src= "" alt="" id ="image1" style="width: 100%; margin-bottom: 10px;">
+                    <img src="" alt="" id ="image3" style="width: 100%">
+                </div>
+                <div class="col-md-3">
+                    <img src="" alt="" id ="image2" style="width: 100%; margin-bottom: 10px;">
+                    <img src="" alt="" id ="image4" style="width: 100%">
                 </div>
             </div>
         </div>
-        <div class="col-md-1"></div>
-    </div>
+    <!-- </div> -->
 
     <script>
         $("#upload").on("click", function(event) {
@@ -119,12 +124,14 @@
                 success: function(data) {
                     $("#image_upload").attr("src",data.filePath);
                     console.log(data);
+                    console.log(data);
                     $.ajax({
                         beforeSend: function(){
+                            $("#image_upload").attr("src",data.filePath);
                             $("#image2").attr("src","");
                             var i;
                             for(i=0;i<5; i++){
-                                var jquery = "#image" + i.toString(); 
+                                var jquery = "#image" + i.toString();
                                 $(jquery).attr("src","");
                             }
                             $("#loader").show();
@@ -136,13 +143,12 @@
                           path: data.filePath
                         },
                         url: '/get_images',
-                        async: true,
                         dataType: 'json',
                         success: function(msg) {
                             $("#loader").hide();
                             var i;
                             for(i=0;i<msg.filePath.length; i++){
-                                var jquery = "#image" + i.toString(); 
+                                var jquery = "#image" + i.toString();
                                 $(jquery).attr("src",msg.filePath[i]);
                                 $(".table").addClass("image-table");
                             }
